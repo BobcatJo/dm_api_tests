@@ -1,4 +1,12 @@
-print('Hello, World!')
+# print('Hello, World!')
 
-if True:
-    ...
+
+
+a = 0.1
+
+b = 2
+
+c = a + b
+
+
+print(type(c))
