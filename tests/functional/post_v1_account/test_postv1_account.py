@@ -9,7 +9,7 @@ from api_mail.apis.mail_api import MailApi
 
 
 def test_post_v1_account():
-    login = 'alex_7'
+    login = 'alex_8'
     password = 'alex_1'
     email = f'{login}@ya.ru'
 
