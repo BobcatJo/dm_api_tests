@@ -11,15 +11,15 @@ class MailApi:
         self.host = host
         self.headers = headers
 
-    def get_api_v2_messages(
-            self,
-            limit=50
-    ):
         """
         Get users emails
         :return:
         """
 
+    def get_api_v2_messages(
+            self,
+            limit=50
+    ):
         params = {
             'limit': limit,
         }
