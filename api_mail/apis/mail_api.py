@@ -19,7 +19,7 @@ class MailApi:
     def get_api_v2_messages(
             self,
             limit=50
-    ):
+        ):
         params = {
             'limit': limit,
         }

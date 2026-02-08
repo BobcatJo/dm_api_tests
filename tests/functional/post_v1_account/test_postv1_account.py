@@ -17,7 +17,7 @@ def test_post_v1_account():
     mail_api = MailApi(
         host='http://185.185.143.231:5025'
     )
-    login = 'wqw_19'
+    login = 'wqw_23'
     password = 'alex_1'
     email = f'{login}@ya.ru'
     json_data = {
@@ -34,7 +34,7 @@ def test_post_v1_account():
     print(
         response.text
     )
-    assert response.status_code == 201, f'Пользователь не создан {response.json}'
+    assert response.status_code == 201, f'Пользователь не создан {response.json()}'
 
     # Получение письма
     response = mail_api.get_api_v2_messages()
@@ -86,24 +86,24 @@ def test_post_v1_account():
     )
     assert response.status_code == 200, "Пользователь {login}, не был авторизован"
 
-    # # Изменение email
-    # json_data = {
-    #     'login': login,
-    #     'password': password,
-    #     'email': f'{login}new@ya.ru',
-    # }
-    #
-    # response = account_api.put_v1_account_email(
-    #     json_data
-    #     )
-    #
-    # print(
-    #     response.status_code
-    # )
-    # print(
-    #     response.text
-    # )
-    # assert response.status_code == 200, 'Email {email}, не был изменен'
+    # Изменение email
+    json_data = {
+        'login': login,
+        'password': password,
+        'email': f'{login}new@ya.ru',
+    }
+
+    response = account_api.put_v1_account_email(
+        json_data
+        )
+
+    print(
+        response.status_code
+    )
+    print(
+        response.text
+    )
+    assert response.status_code == 200, 'Email {email}, не был изменен'
 
     ...
 
@@ -124,5 +124,5 @@ def get_activation_token_by_login(login, response):
             )[-1]
             print(
                 token
-                )
+            )
     return token
