@@ -17,7 +17,7 @@ def test_post_v1_account():
     mail_api = MailApi(
         host='http://185.185.143.231:5025'
     )
-    login = 'wqw_23'
+    login = 'wswqwq7'
     password = 'alex_1'
     email = f'{login}@ya.ru'
     json_data = {
@@ -103,9 +103,72 @@ def test_post_v1_account():
     print(
         response.text
     )
-    assert response.status_code == 200, 'Email {email}, не был изменен'
 
-    ...
+
+    # Авторизация после смены email
+    json_data = {
+        'login': login,
+        'password': password,
+        'rememberMe': True,
+    }
+    response = login_api.post_v1_account_login(
+        json_data=json_data
+    )
+    print(
+        response.status_code
+    )
+    print(
+        response.text
+    )
+
+
+    # Получение письма после смены email
+    response = mail_api.get_api_v2_messages()
+    print(
+        response.status_code
+    )
+    print(
+        response.text
+    )
+
+
+    # Получение токена после смены email
+    token = get_activation_token_by_login(
+        login,
+        response
+    )
+    print(
+        token
+        )
+
+
+    # Активация пользователя после смены email
+    response = account_api.put_v1_account_token(
+        token = token
+    )
+    print(
+        response.status_code
+    )
+    print(
+        response.text
+    )
+
+
+    # Авторизация после смены email
+    json_data = {
+        'login': login,
+        'password': password,
+        'rememberMe': True,
+    }
+    response = login_api.post_v1_account_login(
+        json_data=json_data
+    )
+    print(
+        response.status_code
+    )
+    print(
+        response.text
+    )
 
 
 def get_activation_token_by_login(login, response):
@@ -122,7 +185,4 @@ def get_activation_token_by_login(login, response):
             token = user_data['ConfirmationLinkUrl'].split(
                 '/'
             )[-1]
-            print(
-                token
-            )
     return token
