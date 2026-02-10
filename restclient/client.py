@@ -9,7 +9,7 @@ from restclient.configuration import Configuration
 
 
 class RestClient:
-    def __init__(self, configuration=Configuration):
+    def __init__(self, configuration:Configuration):
         self.host = configuration.host
         self.headers = configuration.headers
         self.disable_log = configuration.disable_log

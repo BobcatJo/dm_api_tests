@@ -14,7 +14,4 @@ class MailApi(RestClient):
         )
         return response
 
-        """
-        Get users emails
-        :return:
-        """
+

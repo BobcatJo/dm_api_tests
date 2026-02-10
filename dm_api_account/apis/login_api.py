@@ -11,10 +11,10 @@ class LoginApi(RestClient):
             path=f'/v1/account/login',
             json=json_data
         )
-        return response
-
         """
         Authenticate via credentials
         :param json_data:
         :return: 
         """
+        return response
+
