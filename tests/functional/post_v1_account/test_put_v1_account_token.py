@@ -25,7 +25,7 @@ def test_put_v1_account_token():
     mail = Mail_api(configuration=mail_configuration)
 
     account_helper = AccountHelper(dm_account_api=account, mail=mail)
-    login = 'asd6'
+    login = 'asd8'
     password = 'alex_1'
     email = f'{login}@ya.ru'
     account_helper.register_new_user(login=login, password=password, email=email)
