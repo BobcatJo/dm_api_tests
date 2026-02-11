@@ -36,8 +36,6 @@ class AccountHelper:
         }
         response = self.dm_account_api.account_api.post_v1_account(json_data=json_data)
         assert response.status_code == 201, f'Пользователь не создан {response.json()}'
-
-
         token = self.get_activation_token_by_login(login=login)
         assert token is not None, f"Токен не был получен для пользователя {login}"
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
@@ -62,15 +60,12 @@ class AccountHelper:
         }
         response = self.dm_account_api.account_api.post_v1_account(json_data=json_data)
         assert response.status_code == 201, f'Пользователь не создан {response.json()}'
-
-
         token = self.get_activation_token_by_login(login=login)
         assert token is not None, f"Токен не был получен для пользователя {login}"
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
         assert response.status_code == 200, f"Пользователь {login},не был активирован"
         response = self.dm_account_api.account_api.put_v1_account_email(json_data)
         response = self.dm_account_api.login_api.post_v1_account_login(json_data=json_data)
-
         token = self.get_activation_token_by_login(login=login)
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
         response = self.dm_account_api.login_api.post_v1_account_login(json_data=json_data)
