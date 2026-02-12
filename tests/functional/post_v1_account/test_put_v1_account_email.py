@@ -20,8 +20,10 @@ def test_put_v1_account_email():
     # Регистрация пользователя
     mail_configuration = MailConfiguration(host='http://185.185.143.231:5025')
     dm_api_configuration = DmApiConfiguration(host='http://185.185.143.231:5051', disable_log=False)
+
     account = DMApiAccount(configuration=dm_api_configuration)
     mail = Mail_api(configuration=mail_configuration)
+
     account_helper = AccountHelper(dm_account_api=account, mail=mail)
     login = 'asd10'
     password = 'alex_1'

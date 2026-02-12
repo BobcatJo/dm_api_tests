@@ -64,7 +64,6 @@ class AccountHelper:
     @retrier
     def get_activation_token_by_login(self, login):
         token = None
-        time.sleep(3)
         response = self.mail.mail_api.get_api_v2_messages()
         for item in response.json()['items']:
             user_data = loads(item['Content']['Body'])
