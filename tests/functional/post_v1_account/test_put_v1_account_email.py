@@ -23,10 +23,11 @@ def test_put_v1_account_email():
     account = DMApiAccount(configuration=dm_api_configuration)
     mail = Mail_api(configuration=mail_configuration)
     account_helper = AccountHelper(dm_account_api=account, mail=mail)
-    login = 'abcd20228'
+    login = 'asd10'
     password = 'alex_1'
     email = f'{login}@ya.ru'
-    account_helper.email_change(login=login, password=password, email=email)
+    account_helper.user_login(login=login, password=password)
+    account_helper.email_change(login=login, password=password)
 
 
 

@@ -52,18 +52,12 @@ class AccountHelper:
         assert response.status_code == 200, "Пользователь {login}, не был авторизован"
         return response
 
-    def email_change(self, login: str, password: str, email: str):
+    def email_change(self, login: str, password: str, remember_me: bool=True):
         json_data = {
             'login': login,
-            'email': email,
             'password': password,
+            'rememberMe': remember_me,
         }
-        response = self.dm_account_api.account_api.post_v1_account(json_data=json_data)
-        assert response.status_code == 201, f'Пользователь не создан {response.json()}'
-        token = self.get_activation_token_by_login(login=login)
-        assert token is not None, f"Токен не был получен для пользователя {login}"
-        response = self.dm_account_api.account_api.put_v1_account_token(token=token)
-        assert response.status_code == 200, f"Пользователь {login},не был активирован"
         response = self.dm_account_api.account_api.put_v1_account_email(json_data)
         return response
 
