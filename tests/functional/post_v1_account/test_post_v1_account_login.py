@@ -1,6 +1,5 @@
 import datetime
 from collections import namedtuple
-
 import pytest
 
 from helpers.account_helper import AccountHelper

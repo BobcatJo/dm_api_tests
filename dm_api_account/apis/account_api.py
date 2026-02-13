@@ -24,8 +24,6 @@ class AccountApi(RestClient):
         """
         return response
 
-
-
     def put_v1_account_email(self, json_data):
         """
         Change registered user email

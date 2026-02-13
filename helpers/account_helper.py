@@ -52,11 +52,11 @@ class AccountHelper:
         assert response.status_code == 200, "Пользователь {login}, не был авторизован"
         return response
 
-    def email_change(self, login: str, password: str, remember_me: bool=True):
+    def email_change(self, login: str, password: str, email: str):
         json_data = {
             'login': login,
             'password': password,
-            'rememberMe': remember_me,
+            'email': email,
         }
         response = self.dm_account_api.account_api.put_v1_account_email(json_data)
         return response
