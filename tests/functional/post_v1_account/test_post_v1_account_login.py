@@ -1,3 +1,6 @@
+import datetime
+from collections import namedtuple
+
 import pytest
 
 from helpers.account_helper import AccountHelper
@@ -32,13 +35,22 @@ def account_helper(account_api, mail_api):
     account_helper = AccountHelper(dm_account_api=account_api, mail=mail_api)
     return account_helper
 
-
-
-def test_post_v1_account_login(account_helper):
-    # Регистрация пользователя
-
-    login = 'zx10231'
+@pytest.fixture
+def prepare_user():
+    now = datetime.datetime.now()
+    data = now.strftime("%d_%m_%Y_%H_%M_%S")
+    login = f'zx_{data}'
     password = 'alex_1'
     email = f'{login}@ya.ru'
+    User = namedtuple('User', ["login","password","email"])
+    user = User(login=login, password=password, email=email)
+    return user
+
+def test_post_v1_account_login(account_helper, prepare_user):
+    login = prepare_user.login
+    password = prepare_user.password
+    email = prepare_user.email
+    # Регистрация пользователя
+
     account_helper.register_new_user(login=login, password=password, email=email)
     account_helper.user_login(login=login, password=password)
