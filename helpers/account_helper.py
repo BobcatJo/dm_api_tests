@@ -2,7 +2,8 @@ import time
 from json import loads
 
 from services.dm_api_account import DMApiAccount
-from services.api_mail import  Mail_api
+from services.api_mail import Mail_api
+
 
 def retrier(function):
     def wrapper(*args, **kwargs):
@@ -10,7 +11,8 @@ def retrier(function):
         count = 0
         while token is None:
             print(f"Попытка получения токена № {count}")
-            token = function(*args, **kwargs)
+            token = function(*args,
+                             **kwargs)
             count += 1
             if count == 5:
                 raise AssertionError('Превышено количество попыток получения токена!')
@@ -21,12 +23,20 @@ def retrier(function):
     return wrapper
 
 
-
 class AccountHelper:
 
     def __init__(self, dm_account_api: DMApiAccount, mail: Mail_api):
         self.dm_account_api = dm_account_api
         self.mail = mail
+
+    def auth_client(self, login: str, password: str):
+        response = self.dm_account_api.login_api.post_v1_account_login(json_data={
+            'login': login,
+            'password': password})
+        token = {
+            'x-dm-auth-token': response.headers['x-dm-auth-token']}
+        self.dm_account_api.account_api.set_headers(token)
+        self.dm_account_api.login_api.set_headers(token)
 
     def register_new_user(self, login: str, password: str, email: str):
         json_data = {
@@ -38,18 +48,19 @@ class AccountHelper:
         assert response.status_code == 201, f'Пользователь не создан {response.json()}'
         token = self.get_activation_token_by_login(login=login)
         assert token is not None, f"Токен не был получен для пользователя {login}"
+
+    def activation_user(self, token):
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
-        assert response.status_code == 200, f"Пользователь {login},не был активирован"
+        assert response.status_code == 200, f"Пользователь не был активирован"
         return response
 
-    def user_login(self, login: str, password: str, remember_me: bool=True):
+    def user_login(self, login: str, password: str, remember_me: bool = True):
         json_data = {
             'login': login,
             'password': password,
-            'rememberMe':remember_me,
+            'rememberMe': remember_me,
         }
         response = self.dm_account_api.login_api.post_v1_account_login(json_data=json_data)
-        assert response.status_code == 200, "Пользователь {login}, не был авторизован"
         return response
 
     def email_change(self, login: str, password: str, email: str):
@@ -59,6 +70,11 @@ class AccountHelper:
             'email': email,
         }
         response = self.dm_account_api.account_api.put_v1_account_email(json_data)
+        response = self.dm_account_api.login_api.post_v1_account_login(json_data=json_data)
+        token = self.get_activation_token_by_login(login=login)
+        assert token is not None, f"Токен не был получен для пользователя {login}"
+        response = self.dm_account_api.account_api.put_v1_account_token(token=token)
+        assert response.status_code == 200, f"Пользователь {login},не был активирован"
         return response
 
     @retrier

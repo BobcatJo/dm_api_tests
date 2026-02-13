@@ -1,66 +1,15 @@
-import datetime
-from collections import namedtuple
-
-import pytest
-
-from helpers.account_helper import AccountHelper
-from restclient.configuration import Configuration as MailConfiguration
-from restclient.configuration import Configuration as DmApiConfiguration
-from services.api_mail import Mail_api
-from services.dm_api_account import DMApiAccount
-import structlog
-structlog.configure(
-    processors=[
-        structlog.processors.JSONRenderer(
-            indent=4,
-            ensure_ascii=True,
-            sort_keys=True
-        ),
-    ]
-)
-@pytest.fixture
-def mail_api():
-    mail_configuration = MailConfiguration(host='http://185.185.143.231:5025')
-    mail_client = Mail_api(configuration=mail_configuration)
-    return mail_client
-
-@pytest.fixture
-def account_api():
-    dm_api_configuration = DmApiConfiguration(host='http://185.185.143.231:5051',disable_log=False)
-    account = DMApiAccount(configuration=dm_api_configuration)
-    return account
-
-@pytest.fixture
-def account_helper(account_api, mail_api):
-    account_helper = AccountHelper(dm_account_api=account_api, mail=mail_api)
-    return account_helper
-
-# @pytest.fixture
-# def prepare_user():
-#     now = datetime.datetime.now()
-#     data = now.strftime("%d_%m_%Y_%H_%M_%S")
-#     login = f'zx_{data}'
-#     password = 'alex_1'
-#     email = f'{login}@ya.ru'
-#     User = namedtuple('User', ["login","password","email"])
-#     user = User(login=login, password=password, email=email)
-#     return user
-
 
 def test_put_v1_account_email(account_helper, mail_api):
-    # Регистрация пользователя
-    # mail_configuration = MailConfiguration(host='http://185.185.143.231:5025')
-    # dm_api_configuration = DmApiConfiguration(host='http://185.185.143.231:5051', disable_log=False)
-    #
-    # account = DMApiAccount(configuration=dm_api_configuration)
-    # mail = Mail_api(configuration=mail_configuration)
+    # Изменение email пользователя
 
-    # account_helper = AccountHelper(dm_account_api=account, mail=mail)
-    login = 'zx_13_02_2026_10_56_49'
+    login = 'zx_13_02_2026_17_00_40'
     password = 'alex_1'
     email = f'{login}@ya.ru'
     account_helper.user_login(login=login, password=password)
     account_helper.email_change(login=login, password=password, email=email)
-
+    account_helper.user_login(login=login, password=password)
+    token =  account_helper.get_activation_token_by_login(login=login)
+    account_helper.activation_user(token=token)
+    account_helper.user_login(login=login, password=password)
 
 
