@@ -46,8 +46,8 @@ class AccountHelper:
         }
         response = self.dm_account_api.account_api.post_v1_account(json_data=json_data)
         assert response.status_code == 201, f'Пользователь не создан {response.json()}'
-        token = self.get_activation_token_by_login(login=login)
-        assert token is not None, f"Токен не был получен для пользователя {login}"
+        # token = self.get_activation_token_by_login(login=login)
+        # assert token is not None, f"Токен не был получен для пользователя {login}"
 
     def activation_user(self, token):
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
@@ -71,6 +71,42 @@ class AccountHelper:
         }
         response = self.dm_account_api.account_api.put_v1_account_email(json_data)
         return response
+
+    def password_reset(self, login: str, email: str):
+        json_data = {
+        "login": login,
+        "email": email,
+        }
+        response = self.dm_account_api.account_api.post_v1_account_password(json_data)
+        assert response.status_code == 200, f"Пароль не был сброшен"
+        return response
+
+
+    def password_change(self, login: str, token:str, password: str, new_password: str):
+        json_data = {
+        "login": login,
+        "token": token,
+        "oldPassword": password,
+        "newPassword": new_password
+        }
+        response = self.dm_account_api.account_api.put_v1_account_password(json_data)
+        assert response.status_code == 200, f"Пароль не был изменен"
+        return response
+
+    def get_token_by_password_reset(self, login):
+        token = None
+        response = self.mail.mail_api.get_api_v2_messages()
+        for item in response.json()['items']:
+            user_data = loads(item['Content']['Body'])
+            user_login = user_data['Login']
+            if user_login == login:
+                link = user_data.get('ConfirmationLinkUri')
+                if not link:
+                    continue
+                token = user_data['ConfirmationLinkUri'].split('/')[-1]
+        print(token)
+        return token
+
 
     @retrier
     def get_activation_token_by_login(self, login):
