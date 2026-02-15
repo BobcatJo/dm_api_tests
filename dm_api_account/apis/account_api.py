@@ -58,3 +58,4 @@ class AccountApi(RestClient):
         """
         response = self.post(path=f'/v1/account/password',json=json_data)
         return response
+
