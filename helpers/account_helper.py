@@ -30,11 +30,8 @@ class AccountHelper:
         self.mail = mail
 
     def auth_client(self, login: str, password: str):
-        response = self.dm_account_api.login_api.post_v1_account_login(json_data={
-            'login': login,
-            'password': password})
-        token = {
-            'x-dm-auth-token': response.headers['x-dm-auth-token']}
+        response = self.user_login(login=login, password=password)
+        token = {'x-dm-auth-token': response.headers['x-dm-auth-token']}
         self.dm_account_api.account_api.set_headers(token)
         self.dm_account_api.login_api.set_headers(token)
 
@@ -46,10 +43,18 @@ class AccountHelper:
         }
         response = self.dm_account_api.account_api.post_v1_account(json_data=json_data)
         assert response.status_code == 201, f'Пользователь не создан {response.json()}'
-        # token = self.get_activation_token_by_login(login=login)
-        # assert token is not None, f"Токен не был получен для пользователя {login}"
+        start_time = time.time()
+        token = self.get_activation_token_by_login(login=login)
+        end_time = time.time()
+        assert end_time - start_time <3,'Время ожидания активации превышено'
+        assert token is not None, f"Токен не был получен для пользователя {login}"
+        response = self.dm_account_api.account_api.put_v1_account_token(token=token)
+        assert response.status_code == 200, 'Пользователь не создан активирован'
+        return response
 
-    def activation_user(self, token):
+    def activation_user(self, login):
+        token = self.get_activation_token_by_login(login=login)
+        assert token is not None, f"Токен не был получен для пользователя {login}"
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
         assert response.status_code == 200, f"Пользователь не был активирован"
         return response
@@ -72,24 +77,22 @@ class AccountHelper:
         response = self.dm_account_api.account_api.put_v1_account_email(json_data)
         return response
 
-    def password_reset(self, login: str, email: str):
-        json_data = {
+    def password_change(self, login: str, email: str, password: str, new_password: str):
+        reset_data = {
         "login": login,
-        "email": email,
+        'email': email,
+        "password": password,
         }
-        response = self.dm_account_api.account_api.post_v1_account_password(json_data)
+        response = self.dm_account_api.account_api.post_v1_account_password(reset_data)
         assert response.status_code == 200, f"Пароль не был сброшен"
-        return response
-
-
-    def password_change(self, login: str, token:str, password: str, new_password: str):
-        json_data = {
+        token = self.get_token_by_password_reset(login=login)
+        change_data = {
         "login": login,
-        "token": token,
+        'token': token,
         "oldPassword": password,
-        "newPassword": new_password
+        "newPassword": f"{password}_new",
         }
-        response = self.dm_account_api.account_api.put_v1_account_password(json_data)
+        response = self.dm_account_api.account_api.put_v1_account_password(change_data)
         assert response.status_code == 200, f"Пароль не был изменен"
         return response
 
@@ -107,6 +110,20 @@ class AccountHelper:
         print(token)
         return token
 
+    def logout(self):
+        response = self.dm_account_api.login_api.delete_v1_account_login()
+        assert response.status_code == 204, "Не удалось выполнить logout"
+        return response
+
+    def logout_all(self):
+        response = self.dm_account_api.login_api.delete_v1_account_login()
+        assert response.status_code == 204, "Не удалось выполнить logout"
+        return response
+
+    def get_account_info(self):
+        response = self.dm_account_api.account_api.get_v1_account()
+        assert response.status_code == 200, "Не удалось выполнить logout"
+        return response
 
 
     @retrier

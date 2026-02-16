@@ -7,6 +7,4 @@ def test_post_v1_account_login(account_helper, prepare_user):
     # Регистрация пользователя
 
     account_helper.register_new_user(login=login, password=password, email=email)
-    token =  account_helper.get_activation_token_by_login(login=login)
-    account_helper.activation_user(token=token)
     account_helper.user_login(login=login, password=password)

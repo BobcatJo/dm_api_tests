@@ -17,32 +17,32 @@ structlog.configure(
         ),
     ]
 )
-@pytest.fixture(scope='session')
+@pytest.fixture(scope='function')
 def mail_api():
     mail_configuration = MailConfiguration(host='http://185.185.143.231:5025')
     mail_client = Mail_api(configuration=mail_configuration)
     return mail_client
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope='function')
 def account_api():
     dm_api_configuration = DmApiConfiguration(host='http://185.185.143.231:5051',disable_log=False)
     account = DMApiAccount(configuration=dm_api_configuration)
     return account
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope='function')
 def account_helper(account_api, mail_api):
     account_helper = AccountHelper(dm_account_api=account_api, mail=mail_api)
     return account_helper
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope='function')
 def auth_account_helper(mail_api):
     dm_api_configuration = DmApiConfiguration(host='http://185.185.143.231:5051',disable_log=False)
     account = DMApiAccount(configuration=dm_api_configuration)
     account_helper = AccountHelper(dm_account_api=account, mail=mail_api)
-    account_helper.auth_client(login = 'zx_15_02_2026_18_06_32', password = 'alex_1')
-    account_helper.default_login = "zx_15_02_2026_18_06_32"
+    account_helper.auth_client(login = 'zx_16_02_2026_17_03_21', password = 'alex_1')
+    account_helper.default_login = "zx_16_02_2026_17_03_21"
     account_helper.default_password = "alex_1"
-    account_helper.default_email = "zx_15_02_2026_18_06_32@ya.ru"
+    account_helper.default_email = "zx_16_02_2026_17_03_21@ya.ru"
     return account_helper
 
 @pytest.fixture
