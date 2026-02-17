@@ -90,7 +90,7 @@ class AccountHelper:
         "login": login,
         'token': token,
         "oldPassword": password,
-        "newPassword": f"{password}_new",
+        "newPassword": new_password,
         }
         response = self.dm_account_api.account_api.put_v1_account_password(change_data)
         assert response.status_code == 200, f"Пароль не был изменен"
@@ -110,18 +110,20 @@ class AccountHelper:
         print(token)
         return token
 
-    def logout(self):
-        response = self.dm_account_api.login_api.delete_v1_account_login()
+    def logout(self,**kwargs):
+        response = self.dm_account_api.login_api.delete_v1_account_login(**kwargs)
         assert response.status_code == 204, "Не удалось выполнить logout"
         return response
 
-    def logout_all(self):
-        response = self.dm_account_api.login_api.delete_v1_account_login()
-        assert response.status_code == 204, "Не удалось выполнить logout"
+    def logout_all(self, token: str | None, **kwargs):
+        headers = kwargs.pop('headers') or {}
+        if token:
+            headers.update({'X-Dm-Auth-Token': token})
+        response = self.dm_account_api.login_api.delete_v1_account_login(headers=headers,**kwargs)
         return response
 
-    def get_account_info(self):
-        response = self.dm_account_api.account_api.get_v1_account()
+    def get_account_info(self,**kwargs):
+        response = self.dm_account_api.account_api.get_v1_account(**kwargs)
         assert response.status_code == 200, "Не удалось выполнить logout"
         return response
 
