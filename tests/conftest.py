@@ -1,4 +1,5 @@
 import datetime
+import uuid
 from collections import namedtuple
 import pytest
 
@@ -46,12 +47,19 @@ def auth_account_helper(mail_api):
     return account_helper
 
 @pytest.fixture
+# def prepare_user():
+#     # now = datetime.datetime.now()
+#     # data = now.strftime("%d_%m_%Y_%H_%M_%S")
+#     # login = f'zx_{data}'
+#     # password = 'alex_1'
+#     # email = f'{login}@ya.ru'
+#     # User = namedtuple('User', ["login","password","email"])
+#     # user = User(login=login, password=password, email=email)
+#     # return user
 def prepare_user():
-    now = datetime.datetime.now()
-    data = now.strftime("%d_%m_%Y_%H_%M_%S")
-    login = f'zx_{data}'
-    password = 'alex_1'
-    email = f'{login}@ya.ru'
-    User = namedtuple('User', ["login","password","email"])
-    user = User(login=login, password=password, email=email)
-    return user
+    uid = uuid.uuid4().hex[:8]
+    return {
+        "login": f"z_{uid}",
+        "email": f"z_{uid}@ya.ru",
+        "password": "alex_1"
+    }

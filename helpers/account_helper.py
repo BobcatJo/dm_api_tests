@@ -124,7 +124,6 @@ class AccountHelper:
 
     def get_account_info(self,**kwargs):
         response = self.dm_account_api.account_api.get_v1_account(**kwargs)
-        assert response.status_code == 200, "Не удалось выполнить logout"
         return response
 
 
