@@ -39,10 +39,10 @@ def auth_account_helper(mail_api):
     dm_api_configuration = DmApiConfiguration(host='http://185.185.143.231:5051',disable_log=False)
     account = DMApiAccount(configuration=dm_api_configuration)
     account_helper = AccountHelper(dm_account_api=account, mail=mail_api)
-    account_helper.auth_client(login = 'zx_16_02_2026_17_03_21', password = 'alex_1')
-    account_helper.default_login = "zx_16_02_2026_17_03_21"
+    account_helper.auth_client(login = 'zx_17_02_2026_11_09_04', password = 'alex_1')
+    account_helper.default_login = "zx_17_02_2026_11_09_04"
     account_helper.default_password = "alex_1"
-    account_helper.default_email = "zx_16_02_2026_17_03_21@ya.ru"
+    account_helper.default_email = "zx_17_02_2026_11_09_04@ya.ru"
     return account_helper
 
 @pytest.fixture
