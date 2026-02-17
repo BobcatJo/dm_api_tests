@@ -1,6 +1,11 @@
 import time
 from json import loads
 
+from dm_api_account.models.email_change_credentials import EmailChangeCredentials
+from dm_api_account.models.login_credentials import LoginCredentials
+from dm_api_account.models.password_change_post import PasswordChangePost
+from dm_api_account.models.password_change_put import PasswordChangePut
+from dm_api_account.models.registration import Registration
 from services.dm_api_account import DMApiAccount
 from services.api_mail import Mail_api
 
@@ -19,7 +24,6 @@ def retrier(function):
             if token:
                 return token
             time.sleep(1)
-
     return wrapper
 
 
@@ -36,12 +40,12 @@ class AccountHelper:
         self.dm_account_api.login_api.set_headers(token)
 
     def register_new_user(self, login: str, password: str, email: str):
-        json_data = {
-            'login': login,
-            'email': email,
-            'password': password,
-        }
-        response = self.dm_account_api.account_api.post_v1_account(json_data=json_data)
+        registration = Registration(
+            login = login,
+            email = email,
+            password =password
+        )
+        response = self.dm_account_api.account_api.post_v1_account(registration=registration)
         assert response.status_code == 201, f'Пользователь не создан {response.json()}'
         start_time = time.time()
         token = self.get_activation_token_by_login(login=login)
@@ -49,50 +53,48 @@ class AccountHelper:
         assert end_time - start_time <3,'Время ожидания активации превышено'
         assert token is not None, f"Токен не был получен для пользователя {login}"
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
-        assert response.status_code == 200, 'Пользователь не создан активирован'
         return response
 
     def activation_user(self, login):
         token = self.get_activation_token_by_login(login=login)
         assert token is not None, f"Токен не был получен для пользователя {login}"
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
-        assert response.status_code == 200, f"Пользователь не был активирован"
         return response
 
-    def user_login(self, login: str, password: str, remember_me: bool = True):
-        json_data = {
-            'login': login,
-            'password': password,
-            'rememberMe': remember_me,
-        }
-        response = self.dm_account_api.login_api.post_v1_account_login(json_data=json_data)
+    def user_login(self, login: str, password: str, remember_me: bool = True, validate_response = False):
+        login_credentials = LoginCredentials(
+            login=login,
+            password=password,
+            remember_me=remember_me,
+        )
+        response = self.dm_account_api.login_api.post_v1_account_login(login_credentials=login_credentials,validate_response=False)
         return response
 
     def email_change(self, login: str, password: str, email: str):
-        json_data = {
-            'login': login,
-            'password': password,
-            'email': email,
-        }
-        response = self.dm_account_api.account_api.put_v1_account_email(json_data)
+        email_change_credentials = EmailChangeCredentials (
+            login=login,
+            password=password,
+            email=email
+        )
+        response = self.dm_account_api.account_api.put_v1_account_email(email_change_credentials)
         return response
 
     def password_change(self, login: str, email: str, password: str, new_password: str):
-        reset_data = {
-        "login": login,
-        'email': email,
-        "password": password,
-        }
-        response = self.dm_account_api.account_api.post_v1_account_password(reset_data)
+        password_change_post = PasswordChangePost(
+            login=login,
+            password=password,
+            email=email,
+        )
+        response = self.dm_account_api.account_api.post_v1_account_password(password_change_post = password_change_post)
         assert response.status_code == 200, f"Пароль не был сброшен"
         token = self.get_token_by_password_reset(login=login)
-        change_data = {
-        "login": login,
-        'token': token,
-        "oldPassword": password,
-        "newPassword": new_password,
-        }
-        response = self.dm_account_api.account_api.put_v1_account_password(change_data)
+        password_change_put = PasswordChangePut(
+            login=login,
+            token=token,
+            oldPassword=password,
+            newPassword=new_password,
+        )
+        response = self.dm_account_api.account_api.put_v1_account_password(password_change_put = password_change_put)
         assert response.status_code == 200, f"Пароль не был изменен"
         return response
 

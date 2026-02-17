@@ -1,5 +1,5 @@
 
-def test_put_v1_account_password(auth_account_helper, account_helper, prepare_user):
+def test_put_v1_account_password(account_helper, prepare_user):
     login = prepare_user.login
     password = prepare_user.password
     email = prepare_user.email

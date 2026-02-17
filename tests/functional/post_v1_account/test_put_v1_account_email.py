@@ -2,7 +2,7 @@
 def test_put_v1_account_email(account_helper, mail_api):
     # Изменение email пользователя
 
-    login = 'z_3c10c66d'
+    login = 'zx_17_02_2026_18_48_51'
     password = 'alex_1'
     email = f'{login}@ya.ru'
 
