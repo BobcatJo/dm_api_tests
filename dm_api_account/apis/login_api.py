@@ -9,7 +9,7 @@ class LoginApi(RestClient):
 
 
 
-    def post_v1_account_login(self, login_credentials : LoginCredentials,validate_response=True):
+    def post_v1_account_login(self, login_credentials : LoginCredentials,validate_response=False):
         """
         Authenticate via credentials
         :param json_data:
@@ -21,7 +21,9 @@ class LoginApi(RestClient):
         )
         if validate_response:
             return UserEnvelope(**response.json())
-        return response
+        model = UserEnvelope(**response.json())
+        return response, model
+
 
     def delete_v1_account_login(self, **kwargs):
         """

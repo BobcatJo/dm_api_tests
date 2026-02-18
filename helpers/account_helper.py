@@ -1,11 +1,11 @@
 import time
 from json import loads
-
 from dm_api_account.models.email_change_credentials import EmailChangeCredentials
 from dm_api_account.models.login_credentials import LoginCredentials
 from dm_api_account.models.password_change_post import PasswordChangePost
 from dm_api_account.models.password_change_put import PasswordChangePut
 from dm_api_account.models.registration import Registration
+from dm_api_account.models.user_envelope import UserEnvelope
 from services.dm_api_account import DMApiAccount
 from services.api_mail import Mail_api
 
@@ -34,10 +34,12 @@ class AccountHelper:
         self.mail = mail
 
     def auth_client(self, login: str, password: str):
-        response = self.user_login(login=login, password=password)
-        token = {'x-dm-auth-token': response.headers['x-dm-auth-token']}
-        self.dm_account_api.account_api.set_headers(token)
-        self.dm_account_api.login_api.set_headers(token)
+        response, user = self.user_login(login=login, password=password, validate_response = False)
+        token = response.headers.get('x-dm-auth-token')
+        self.dm_account_api.account_api.set_headers({'X-Dm-Auth-Token': token})
+        self.dm_account_api.login_api.set_headers({'X-Dm-Auth-Token': token})
+        return user
+
 
     def register_new_user(self, login: str, password: str, email: str):
         registration = Registration(
@@ -61,14 +63,17 @@ class AccountHelper:
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
         return response
 
-    def user_login(self, login: str, password: str, remember_me: bool = True, validate_response = False):
+    def user_login(self, login: str, password: str, remember_me: bool=True, validate_response=False,validate_headers=False):
         login_credentials = LoginCredentials(
             login=login,
             password=password,
             remember_me=remember_me,
         )
-        response = self.dm_account_api.login_api.post_v1_account_login(login_credentials=login_credentials,validate_response=False)
-        return response
+        response, user = self.dm_account_api.login_api.post_v1_account_login(login_credentials=login_credentials,validate_response=False)
+        if validate_headers:
+            assert response.headers['x-dm-auth-token'],'Токен для пользователя не получен'
+            assert response.status_code == 200, 'Пользователь не смог авторизоваться'
+        return response, user
 
     def email_change(self, login: str, password: str, email: str):
         email_change_credentials = EmailChangeCredentials (
@@ -126,7 +131,8 @@ class AccountHelper:
 
     def get_account_info(self,**kwargs):
         response = self.dm_account_api.account_api.get_v1_account(**kwargs)
-        return response
+        user = UserEnvelope(**response.json())
+        return user
 
 
     @retrier

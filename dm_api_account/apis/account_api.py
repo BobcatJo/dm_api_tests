@@ -29,6 +29,7 @@ class AccountApi(RestClient):
         UserDetailsEnvelope(**response.json())
         return response
 
+
     def put_v1_account_token(self,token,validate_response=True):
         """
         Activate register user
