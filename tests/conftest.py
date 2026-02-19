@@ -49,7 +49,7 @@ def auth_account_helper(mail_api):
 @pytest.fixture
 def prepare_user():
     now = datetime.datetime.now()
-    data = now.strftime("%d_%m_%Y_%H_%M_%S")
+    data = uuid.uuid4()
     login = f'zx_{data}'
     password = 'alex_1'
     email = f'{login}@ya.ru'

@@ -11,7 +11,7 @@ class AccountApi(RestClient):
 
 
 
-    def post_v1_account(self,registration: Registration):
+    def post_v1_account(self,registration: Registration,validate_response=True):
         """
         Register new user
         :param json_data:
@@ -20,13 +20,14 @@ class AccountApi(RestClient):
         response = self.post(path=f'/v1/account', json=registration.model_dump(exclude_none=True, by_alias=True))
         return response
 
-    def get_v1_account(self,**kwargs):
+    def get_v1_account(self,validate_response=True,**kwargs):
         """
         Get current user
         :return:
         """
         response = self.get(path=f'/v1/account', **kwargs)
-        UserDetailsEnvelope(**response.json())
+        if validate_response:
+            UserDetailsEnvelope(**response.json())
         return response
 
 
@@ -42,33 +43,36 @@ class AccountApi(RestClient):
             return UserEnvelope(**response.json())
         return response
 
-    def put_v1_account_email(self, email_change_credentials:EmailChangeCredentials):
+    def put_v1_account_email(self, email_change_credentials:EmailChangeCredentials,validate_response=False):
         """
         Change registered user email
         :param json_data:
         :return
         """
         response = self.put(path=f'/v1/account/email',json=email_change_credentials.model_dump(exclude_none=True, by_alias=True))
-        UserEnvelope(**response.json())
+        if validate_response:
+            return UserEnvelope(**response.json())
         return response
 
-    def put_v1_account_password(self, password_change_put:PasswordChangePut):
+    def put_v1_account_password(self, password_change_put:PasswordChangePut,validate_response=False):
         """
         Change registered user password
         :param json_data:
         :return
         """
         response = self.put(path=f'/v1/account/password',json=password_change_put.model_dump(exclude_none=True, by_alias=True))
-        UserEnvelope(**response.json())
+        if validate_response:
+            return UserEnvelope(**response.json())
         return response
 
-    def post_v1_account_password(self, password_change_post:PasswordChangePost):
+    def post_v1_account_password(self, password_change_post:PasswordChangePost,validate_response=False):
         """
         Reset registered user password
         :param json_data:
         :return
         """
         response = self.post(path=f'/v1/account/password',json=password_change_post.model_dump(exclude_none=True, by_alias=True))
-        UserEnvelope(**response.json())
+        if validate_response:
+            return UserEnvelope(**response.json())
         return response
 
