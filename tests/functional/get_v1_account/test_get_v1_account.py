@@ -8,10 +8,13 @@ from hamcrest import assert_that, \
     has_properties, \
     equal_to
 
+from checkers.http_checkers import check_status_code_http
+
 
 def test_get_v1_account_auth(auth_account_helper):
-    response = auth_account_helper.get_account_info()
-    assert_that(response,
+    with check_status_code_http():
+        response = auth_account_helper.get_account_info()
+        assert_that(response,
                has_property("resource",
                             all_of(
                           has_property('login',
@@ -33,4 +36,5 @@ def test_get_v1_account_auth(auth_account_helper):
 
 
 def test_get_v1_account_no_auth(account_helper):
-    account_helper.get_account_info()
+    with check_status_code_http(401, 'User must be authenticated'):
+        account_helper.get_account_info()
