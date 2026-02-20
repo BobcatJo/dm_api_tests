@@ -11,7 +11,7 @@ class AccountApi(RestClient):
 
 
 
-    def post_v1_account(self,registration: Registration,validate_response=True):
+    def post_v1_account(self,registration: Registration):
         """
         Register new user
         :param json_data:
@@ -43,7 +43,7 @@ class AccountApi(RestClient):
             return UserEnvelope(**response.json())
         return response
 
-    def put_v1_account_email(self, email_change_credentials:EmailChangeCredentials,validate_response=False):
+    def put_v1_account_email(self, email_change_credentials:EmailChangeCredentials,validate_response=True):
         """
         Change registered user email
         :param json_data:
@@ -54,7 +54,7 @@ class AccountApi(RestClient):
             return UserEnvelope(**response.json())
         return response
 
-    def put_v1_account_password(self, password_change_put:PasswordChangePut,validate_response=False):
+    def put_v1_account_password(self, password_change_put:PasswordChangePut,validate_response=True):
         """
         Change registered user password
         :param json_data:
@@ -65,7 +65,7 @@ class AccountApi(RestClient):
             return UserEnvelope(**response.json())
         return response
 
-    def post_v1_account_password(self, password_change_post:PasswordChangePost,validate_response=False):
+    def post_v1_account_password(self, password_change_post:PasswordChangePost,validate_response=True):
         """
         Reset registered user password
         :param json_data:

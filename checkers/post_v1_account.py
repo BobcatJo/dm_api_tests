@@ -14,10 +14,10 @@ from helpers.account_helper import AccountHelper
 class PostV1Account:
 
     @classmethod
-    def check_responcse_values(cls, envelope):
+    def check_response_values(cls, response):
         today = datetime.now().strftime('%Y-%m-%d')
-        assert_that(envelope.resource.registration), starts_with(today)
-        assert_that(envelope,
+        assert_that(str(response.resource.registration), starts_with(today))
+        assert_that(response,
                     has_property("resource",
                                  all_of(
                                      has_property('login',

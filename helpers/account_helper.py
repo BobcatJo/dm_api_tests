@@ -34,11 +34,11 @@ class AccountHelper:
         self.mail = mail
 
     def auth_client(self, login: str, password: str):
-        response, user = self.user_login(login=login, password=password, validate_response = False)
+        response = self.user_login(login=login, password=password, validate_response = False)
         token = response.headers.get('x-dm-auth-token')
         self.dm_account_api.account_api.set_headers({'X-Dm-Auth-Token': token})
         self.dm_account_api.login_api.set_headers({'X-Dm-Auth-Token': token})
-        return user
+        return token
 
 
     def register_new_user(self, login: str, password: str, email: str):
@@ -69,10 +69,10 @@ class AccountHelper:
             password=password,
             remember_me=remember_me,
         )
-        response, user = self.dm_account_api.login_api.post_v1_account_login(login_credentials=login_credentials,validate_response=False)
+        response= self.dm_account_api.login_api.post_v1_account_login(login_credentials=login_credentials,validate_response=validate_response)
         if validate_headers:
             assert response.headers['x-dm-auth-token'],'Токен для пользователя не получен'
-        return response, user
+        return response
 
     def email_change(self, login: str, password: str, email: str):
         email_change_credentials = EmailChangeCredentials (
@@ -90,7 +90,7 @@ class AccountHelper:
             email=email,
         )
         response = self.dm_account_api.account_api.post_v1_account_password(password_change_post = password_change_post)
-        assert response.status_code == 200, f"Пароль не был сброшен"
+        # assert response.status_code == 200, f"Пароль не был сброшен"
         token = self.get_token_by_password_reset(login=login)
         password_change_put = PasswordChangePut(
             login=login,
@@ -99,7 +99,7 @@ class AccountHelper:
             newPassword=new_password,
         )
         response = self.dm_account_api.account_api.put_v1_account_password(password_change_put = password_change_put)
-        assert response.status_code == 200, f"Пароль не был изменен"
+        # assert response.status_code == 200, f"Пароль не был изменен"
         return response
 
     def get_token_by_password_reset(self, login):

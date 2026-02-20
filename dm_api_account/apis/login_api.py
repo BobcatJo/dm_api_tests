@@ -1,4 +1,3 @@
-import requests
 
 from dm_api_account.models.login_credentials import LoginCredentials
 from dm_api_account.models.user_envelope import UserEnvelope
@@ -9,7 +8,7 @@ class LoginApi(RestClient):
 
 
 
-    def post_v1_account_login(self, login_credentials : LoginCredentials,validate_response=False):
+    def post_v1_account_login(self, login_credentials : LoginCredentials,validate_response=True):
         """
         Authenticate via credentials
         :param json_data:
@@ -21,8 +20,7 @@ class LoginApi(RestClient):
         )
         if validate_response:
             return UserEnvelope(**response.json())
-        model = UserEnvelope(**response.json())
-        return response, model
+        return response
 
 
     def delete_v1_account_login(self, **kwargs):
