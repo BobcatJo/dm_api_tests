@@ -1,0 +1,7 @@
+service:
+  dm_api_account: 'http://185.185.143.231:5051'
+  mail: 'http://185.185.143.231:5025'
+
+user:
+  login: 'zx_18_02_2026_13_21_17'
+  password: 'alex_1'
