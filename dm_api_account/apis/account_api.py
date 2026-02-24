@@ -1,4 +1,4 @@
-import requests
+import allure
 
 from dm_api_account.models.email_change_credentials import EmailChangeCredentials
 from dm_api_account.models.password_change_post import PasswordChangePost
@@ -7,10 +7,10 @@ from dm_api_account.models.registration import Registration
 from dm_api_account.models.user_details_envelope import UserDetailsEnvelope
 from dm_api_account.models.user_envelope import UserEnvelope
 from restclient.client import RestClient
+
 class AccountApi(RestClient):
 
-
-
+    @allure.step('Зарегистрировать нового пользователя')
     def post_v1_account(self,registration: Registration):
         """
         Register new user
@@ -20,6 +20,7 @@ class AccountApi(RestClient):
         response = self.post(path=f'/v1/account', json=registration.model_dump(exclude_none=True, by_alias=True))
         return response
 
+    @allure.step('Получить информацию о пользователе')
     def get_v1_account(self,validate_response=True,**kwargs):
         """
         Get current user
@@ -30,7 +31,7 @@ class AccountApi(RestClient):
             UserDetailsEnvelope(**response.json())
         return response
 
-
+    @allure.step('Активировать пользователя')
     def put_v1_account_token(self,token,validate_response=True):
         """
         Activate register user
@@ -43,6 +44,7 @@ class AccountApi(RestClient):
             return UserEnvelope(**response.json())
         return response
 
+    @allure.step('Сменить email')
     def put_v1_account_email(self, email_change_credentials:EmailChangeCredentials,validate_response=True):
         """
         Change registered user email
@@ -54,6 +56,7 @@ class AccountApi(RestClient):
             return UserEnvelope(**response.json())
         return response
 
+    @allure.step('Изменить пароль')
     def put_v1_account_password(self, password_change_put:PasswordChangePut,validate_response=True):
         """
         Change registered user password
@@ -65,6 +68,7 @@ class AccountApi(RestClient):
             return UserEnvelope(**response.json())
         return response
 
+    @allure.step('Сбросить пароль')
     def post_v1_account_password(self, password_change_post:PasswordChangePost,validate_response=True):
         """
         Reset registered user password

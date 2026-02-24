@@ -1,3 +1,12 @@
+import allure
+
+
+
+@allure.suite('Тесты на проверку метода PUT v1/password')
+@allure.sub_suite('Позитивные тесты')
+@allure.title('Проверка смены пароля пользователя')
+
+
 
 def test_put_v1_account_password(account_helper, prepare_user):
     login = prepare_user.login

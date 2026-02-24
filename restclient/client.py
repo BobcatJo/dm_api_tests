@@ -1,3 +1,4 @@
+
 from requests import session
 from requests import JSONDecodeError
 
@@ -6,6 +7,7 @@ import uuid
 import curlify
 
 from restclient.configuration import Configuration
+from restclient.utilites import allure_attach
 
 
 class RestClient:
@@ -21,18 +23,18 @@ class RestClient:
             self.session.headers.update(headers)
 
     def post(self,path,**kwargs):
-        return self._send_request(method='post', path=path, **kwargs)
+        return self._send_request(method='POST', path=path, **kwargs)
 
     def get(self,path,**kwargs):
-        return self._send_request(method='get', path=path, **kwargs)
+        return self._send_request(method='GET', path=path, **kwargs)
 
     def put(self,path,**kwargs):
-        return self._send_request(method='put', path=path, **kwargs)
+        return self._send_request(method='PUT', path=path, **kwargs)
 
     def delete(self,path,**kwargs):
-        return self._send_request(method='delete', path=path, **kwargs)
+        return self._send_request(method='DELETE', path=path, **kwargs)
 
-
+    @allure_attach
     def _send_request(self, method, path, **kwargs):
         log = self.log.bind(event_id=str(uuid.uuid4()))
         full_url = self.host + path

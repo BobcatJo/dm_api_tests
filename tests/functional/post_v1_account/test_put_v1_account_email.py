@@ -1,3 +1,9 @@
+import allure
+
+@allure.suite('Тесты на проверку метода PUT v1/account/email')
+@allure.sub_suite('Позитивные тесты')
+@allure.title('Проверка смены email пользователя')
+
 
 def test_put_v1_account_email(account_helper, mail_api):
     # Изменение email пользователя

@@ -1,3 +1,8 @@
+import allure
+
+@allure.suite('Тесты на проверку метода PUT v1/account/token')
+@allure.sub_suite('Позитивные тесты')
+@allure.title('Проверка активации нового пользователя')
 
 def test_put_v1_account_token(account_helper, prepare_user):
     login = prepare_user.login
