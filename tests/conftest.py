@@ -10,6 +10,9 @@ from restclient.configuration import Configuration as DmApiConfiguration
 from services.api_mail import Mail_api
 from services.dm_api_account import DMApiAccount
 import structlog
+from swagger_coverage_py.reporter import CoverageReporter
+
+
 structlog.configure(
     processors=[
         structlog.processors.JSONRenderer(
@@ -21,6 +24,14 @@ structlog.configure(
 )
 
 options = ('service.dm_api_account', 'service.mail', 'user.login' , 'user.password')
+
+@pytest.fixture(scope="session", autouse=True)
+def setup_swagger_coverage():
+    reporter = CoverageReporter(api_name="dm-api-account", host="http://185.185.143.231:5051")
+    reporter.setup("/swagger/Account/swagger.json")
+    yield
+    reporter.generate_report()
+    reporter.cleanup_input_files()
 
 @pytest.fixture(scope='function', autouse=True)
 def set_config(request):
