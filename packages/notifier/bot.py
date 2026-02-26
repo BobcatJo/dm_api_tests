@@ -17,6 +17,9 @@ def send_file() -> None:
             document=document,
             caption="coverage",
             )
+import telebot.apihelper as apihelper
+apihelper.CONNECT_TIMEOUT = 30
+apihelper.READ_TIMEOUT = 120
 
 if __name__ == "__main__":
     send_file()
