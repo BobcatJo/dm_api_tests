@@ -32,12 +32,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Prepare swagger coverage directories
-        run: |
-          mkdir -p swagger-coverage-output
-#          mkdir -p swagger-coverage-output/185.185.143.231:5051
-          mkdir -p swagger-coverage-output/185.185.143.231:5025
-
       - name: Run tests
         run: |
           export JAVA_HOME=$JAVA_HOME
