@@ -3,12 +3,12 @@ from json import loads
 
 import allure
 
-from dm_api_account.models.email_change_credentials import EmailChangeCredentials
-from dm_api_account.models.login_credentials import LoginCredentials
-from dm_api_account.models.password_change_post import PasswordChangePost
-from dm_api_account.models.password_change_put import PasswordChangePut
-from dm_api_account.models.registration import Registration
-from dm_api_account.models.user_envelope import UserEnvelope
+from clients.http.dm_api_account.models.email_change_credentials import EmailChangeCredentials
+from clients.http.dm_api_account.models.login_credentials import LoginCredentials
+from clients.http.dm_api_account.models.password_change_post import PasswordChangePost
+from clients.http.dm_api_account.models.password_change_put import PasswordChangePut
+from clients.http.dm_api_account.models.registration import Registration
+from clients.http.dm_api_account.models.user_envelope import UserEnvelope
 from services.dm_api_account import DMApiAccount
 from services.api_mail import Mail_api
 

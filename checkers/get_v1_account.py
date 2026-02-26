@@ -9,8 +9,6 @@ from hamcrest import assert_that, \
     equal_to, \
     instance_of
 
-from dm_api_account.models.user_envelope import UserEnvelope
-
 
 class GetV1Account:
 

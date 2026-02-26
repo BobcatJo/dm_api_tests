@@ -5,3 +5,7 @@ service:
 user:
   login: 'zx_18_02_2026_13_21_17'
   password: 'alex_1'
+
+telegram:
+  chat_id: '-5233717777'
+  token: '8656095263:AAHK3XbKLaEBMoX8vbUCi8TmwEvYfyfLOfg'

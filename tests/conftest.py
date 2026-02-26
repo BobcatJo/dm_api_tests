@@ -1,12 +1,14 @@
 import datetime
+import os
 import uuid
 from collections import namedtuple
 import pytest
 from vyper import v
 from pathlib import Path
 from helpers.account_helper import AccountHelper
-from restclient.configuration import Configuration as MailConfiguration
-from restclient.configuration import Configuration as DmApiConfiguration
+from packages.notifier.bot import send_file
+from packages.restclient.configuration import Configuration as MailConfiguration
+from packages.restclient.configuration import Configuration as DmApiConfiguration
 from services.api_mail import Mail_api
 from services.dm_api_account import DMApiAccount
 import structlog
@@ -23,7 +25,7 @@ structlog.configure(
     ]
 )
 
-options = ('service.dm_api_account', 'service.mail', 'user.login' , 'user.password')
+options = ('service.dm_api_account', 'service.mail', 'user.login' , 'user.password', 'telegram.chat_id', 'telegram.token',)
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_swagger_coverage():
@@ -42,6 +44,10 @@ def set_config(request):
     v.read_in_config()
     for option in options:
         v.set(f'{option}', request.config.getoption(f'{option}'))
+    os.environ["TELEGRAM_BOT_CHAT_ID"] = v.get("telegram.chat_id")
+    os.environ["TELEGRAM_BOT_ACCESS_TOKEN"] = v.get("telegram.token")
+    request.config.stash['telegram-notifier-addfields']['enviroment'] = config_name
+    request.config.stash['telegram-notifier-addfields']['report'] = 'https://bobcatjo.github.io/dm_api_tests/'
 
 def pytest_addoption(parser):
     parser.addoption('--env', action='store', default='stg', help='run stg')
