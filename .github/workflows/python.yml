@@ -19,7 +19,7 @@ jobs:
           python-version: '3.14'
 
       - name: Set up Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '11'
           distribution: 'adopt'
@@ -35,8 +35,7 @@ jobs:
       - name: Run tests
         run: |
           export JAVA_HOME=$JAVA_HOME
-#          pytest ./tests --alluredir=allure-results --disable-warnings
-          DEBUG_MODE=true pytest ./tests --alluredir=allure-results --disable-warnings
+          pytest ./tests --alluredir=allure-results --disable-warnings
         continue-on-error: true
 
       - name: Run Coverage
