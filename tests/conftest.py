@@ -29,7 +29,6 @@ options = ('service.dm_api_account', 'service.mail', 'user.login' , 'user.passwo
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_swagger_coverage():
-    Path("swagger-coverage-output").mkdir(parents=True, exist_ok=True)
     reporter = CoverageReporter(api_name="dm-api-account", host="http://185.185.143.231:5051")
     reporter.setup("/swagger/Account/swagger.json")
     yield
