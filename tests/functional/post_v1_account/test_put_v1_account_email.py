@@ -8,7 +8,7 @@ import allure
 def test_put_v1_account_email(account_helper, mail_api):
     # Изменение email пользователя
 
-    login = 'zx_14636dc6-004f-4acf-aaf7-25304e22f8ee'
+    login = 'zx_c38a3f03-78ee-45dd-9b67-efcd2b8ec562'
     password = 'alex_1'
     email = f'{login}@ya.ru'
 
