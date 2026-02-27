@@ -43,6 +43,7 @@ jobs:
       - name: Run Coverage
         if: ${{ always()}}
         run: | 
+          java --version
           ls 
           python -m packages.notifier.bot
 
