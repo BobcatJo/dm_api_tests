@@ -24,7 +24,7 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
 
-      - name: Set JAVA HOME
+      - name: Set JAVA_HOME
         run: echo "JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))" >> $GITHUB_ENV
 
       - name: Install dependencies
@@ -35,12 +35,12 @@ jobs:
       - name: Run tests
         run: |
           export JAVA_HOME=$JAVA_HOME
-          DEBUG_MODE=true pytest ./tests --alluredir=allure-results --disable-warnings -s -vv
+          pytest ./tests --alluredir=allure-results --disable-warnings
         continue-on-error: true
 
       - name: Run Coverage
         if: ${{ always()}}
-        run: |
+        run: | 
           python -m packages.notifier.bot
 
       - name: Archive allure results
