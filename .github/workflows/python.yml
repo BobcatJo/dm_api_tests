@@ -38,7 +38,7 @@ jobs:
           which java
           ls
           export JAVA_HOME=$JAVA_HOME
-          DEBUG_MODE=true pytest ./tests --alluredir=allure-results --disable-warnings -s -vv
+          pytest ./tests --alluredir=allure-results --disable-warnings
         continue-on-error: true
 
       - name: Run Coverage
