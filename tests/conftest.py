@@ -6,7 +6,6 @@ import pytest
 from vyper import v
 from pathlib import Path
 from helpers.account_helper import AccountHelper
-from packages.notifier.bot import send_file
 from packages.restclient.configuration import Configuration as MailConfiguration
 from packages.restclient.configuration import Configuration as DmApiConfiguration
 from services.api_mail import Mail_api
