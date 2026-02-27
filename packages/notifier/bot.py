@@ -1,12 +1,15 @@
 from pathlib import Path
 from telebot import TeleBot
 from vyper import v
+import telebot.apihelper as apihelper
 
 config = Path(__file__).parent.joinpath('../../').joinpath('config')
 v.set_config_name("prod")
 v.add_config_path(config)
 v.read_in_config()
 
+apihelper.CONNECT_TIMEOUT = 30
+apihelper.READ_TIMEOUT = 120
 
 def send_file() -> None:
     telegram_bot = TeleBot(v.get("telegram.token"))
@@ -17,9 +20,7 @@ def send_file() -> None:
             document=document,
             caption="coverage",
             )
-import telebot.apihelper as apihelper
-apihelper.CONNECT_TIMEOUT = 30
-apihelper.READ_TIMEOUT = 120
+
 
 if __name__ == "__main__":
     send_file()
