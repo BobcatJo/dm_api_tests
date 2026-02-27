@@ -8,8 +8,8 @@ v.set_config_name("prod")
 v.add_config_path(config)
 v.read_in_config()
 
-apihelper.CONNECT_TIMEOUT = 30
-apihelper.READ_TIMEOUT = 120
+# apihelper.CONNECT_TIMEOUT = 30
+# apihelper.READ_TIMEOUT = 120
 
 def send_file() -> None:
     telegram_bot = TeleBot(v.get("telegram.token"))
