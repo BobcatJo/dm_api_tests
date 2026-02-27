@@ -35,6 +35,7 @@ jobs:
       - name: Run tests
         run: |
           java --version
+          where java
           ls
           export JAVA_HOME=$JAVA_HOME
           DEBUG_MODE=true pytest ./tests --alluredir=allure-results --disable-warnings -s -vv
@@ -59,10 +60,10 @@ jobs:
     needs: test
     name: Generate report
     steps:
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v3
         with:
           distribution: 'microsoft'
-          java-version: '11'
+          java-version: '17'
       - run: sudo wget https://github.com/allure-framework/allure2/releases/download/2.29.0/allure-2.29.0.tgz && sudo tar -xvzf allure-2.29.0.tgz -C /opt/ && sudo ln -s /opt/allure-2.29.0/bin/allure /usr/bin/allure
       - name: Download allure results
         uses: actions/download-artifact@v4
