@@ -36,7 +36,7 @@ class AccountHelper:
         self.dm_account_api = dm_account_api
         self.mail = mail
 
-    # @allure.step('Авторизация пользователя')
+    @allure.step('Авторизация пользователя')
     def auth_client(self, login: str, password: str):
         response = self.user_login(login=login, password=password, validate_response = False)
         token = response.headers.get('x-dm-auth-token')
@@ -44,7 +44,7 @@ class AccountHelper:
         self.dm_account_api.login_api.set_headers({'X-Dm-Auth-Token': token})
         return token
 
-    # @allure.step('Регистрация нового пользователя')
+    @allure.step('Регистрация нового пользователя')
     def register_new_user(self, login: str, password: str, email: str):
         registration = Registration(
             login = login,
@@ -61,14 +61,14 @@ class AccountHelper:
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
         return response
 
-    # @allure.step('Получение токена при активации')
+    @allure.step('Получение токена при активации')
     def activation_user(self, login):
         token = self.get_activation_token_by_login(login=login)
         assert token is not None, f"Токен не был получен для пользователя {login}"
         response = self.dm_account_api.account_api.put_v1_account_token(token=token)
         return response
 
-    # @allure.step('Аутентфикация пользователя')
+    @allure.step('Аутентфикация пользователя')
     def user_login(self, login: str, password: str, remember_me: bool=True, validate_response=False,validate_headers=False):
         login_credentials = LoginCredentials(
             login=login,
@@ -80,7 +80,7 @@ class AccountHelper:
             assert response.headers['x-dm-auth-token'],'Токен для пользователя не получен'
         return response
 
-    # @allure.step('Смена email')
+    @allure.step('Смена email')
     def email_change(self, login: str, password: str, email: str):
         email_change_credentials = EmailChangeCredentials (
             login=login,
@@ -90,7 +90,7 @@ class AccountHelper:
         response = self.dm_account_api.account_api.put_v1_account_email(email_change_credentials)
         return response
 
-    # @allure.step('Смена пароля')
+    @allure.step('Смена пароля')
     def password_change(self, login: str, email: str, password: str, new_password: str):
         password_change_post = PasswordChangePost(
             login=login,
@@ -110,7 +110,7 @@ class AccountHelper:
         # assert response.status_code == 200, f"Пароль не был изменен"
         return response
 
-    # @allure.step('Получение токена после сброса пароля ')
+    @allure.step('Получение токена после сброса пароля')
     def get_token_by_password_reset(self, login):
         token = None
         response = self.mail.mail_api.get_api_v2_messages()
@@ -125,13 +125,13 @@ class AccountHelper:
         print(token)
         return token
 
-    # @allure.step('Разлогинивание пользователя')
+    @allure.step('Разлогинивание пользователя')
     def logout(self,**kwargs):
         response = self.dm_account_api.login_api.delete_v1_account_login(**kwargs)
         assert response.status_code == 204, "Не удалось выполнить logout"
         return response
 
-    # @allure.step('Разлогинивание пользователя со всех устройств')
+    @allure.step('Разлогинивание пользователя со всех устройств')
     def logout_all(self, token: str | None, **kwargs):
         headers = kwargs.pop('headers') or {}
         if token:
@@ -139,7 +139,7 @@ class AccountHelper:
         response = self.dm_account_api.login_api.delete_v1_account_login(headers=headers,**kwargs)
         return response
 
-    # @allure.step('Получение информации о пользователе')
+    @allure.step('Получение информации о пользователе')
     def get_account_info(self,**kwargs):
         response = self.dm_account_api.account_api.get_v1_account(**kwargs)
         user = UserEnvelope(**response.json())
