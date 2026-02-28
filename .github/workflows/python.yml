@@ -34,10 +34,10 @@ jobs:
 
       - name: Run tests
         run: |
-          java --version
-          which java
-          ls
-          export JAVA_HOME=$JAVA_HOME
+#          java --version
+#          which java
+#          ls
+#          export JAVA_HOME=$JAVA_HOME
           pytest ./tests --alluredir=allure-results --disable-warnings
         continue-on-error: true
 
