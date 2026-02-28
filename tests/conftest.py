@@ -32,7 +32,7 @@ def setup_swagger_coverage():
     reporter.setup("/swagger/Account/swagger.json")
     yield
     reporter.generate_report()
-    reporter.cleanup_input_files()
+    # reporter.cleanup_input_files()
 
 @pytest.fixture(scope='function', autouse=True)
 def set_config(request):
