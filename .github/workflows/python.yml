@@ -32,15 +32,31 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Fix swagger coverage classpath
+      - name: Deep debug swagger coverage
         run: |
-          # Создаем переменную с правильным classpath
-          JAR_DIR="/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/swagger_coverage_py/swagger-coverage-commandline/lib"
-          JAR_FILES=$(find "$JAR_DIR" -name "*.jar" | tr '\n' ':')
-          export SWAGGER_COVERAGE_CP="$JAR_FILES"
+          echo "=== 1. Check Java version ==="
+          java -version
           
-          # Запускаем тесты с правильным classpath
-          PYTHONPATH=. pytest tests/functional/
+          echo "=== 2. Check JAR files ==="
+          JAR_DIR="/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/swagger_coverage_py/swagger-coverage-commandline/lib"
+          ls -la "$JAR_DIR" || echo "❌ JAR directory not found!"
+          
+          echo "=== 3. Count JAR files ==="
+          find "$JAR_DIR" -name "*.jar" | wc -l
+          
+          echo "=== 4. Test Java command with verbose output ==="
+          # Пробуем запустить ту же команду и захватываем ВСЕ выводы
+          java -cp "$JAR_DIR"/* com.github.viclovsky.swagger.coverage.CommandLine \
+            -s swagger-doc-dm-api-account.json \
+            -i swagger-coverage-output/185_185_143_231_5051 \
+            -c swagger-coverage-config-dm-api-account.json 2>&1 || echo "❌ Java command failed with status $?"
+          
+          echo "=== 5. Check if main class exists ==="
+          # Проверяем, есть ли нужный класс в JAR файлах
+          for jar in "$JAR_DIR"/*.jar; do
+            echo "Checking $jar"
+            jar tf "$jar" | grep -i "com.github.viclovsky.swagger.coverage.CommandLine" && echo "✅ Class found in $jar" || echo "❌ Class not found in $jar"
+          done
             
       - name: Run tests
         run: |
@@ -49,13 +65,6 @@ jobs:
           which java
           python -m pytest ./tests --alluredir=allure-results --disable-warnings
         continue-on-error: true
-
-      - name: Check files
-        run: |
-          ls -la
-          ls -la swagger-coverage-output/ || echo "Directory not found"
-          ls -la allure-results/ || echo "Directory not found"
-          test -f swagger-doc-dm-api-account.json || echo "Swagger file not found"
 
       - name: Run Coverage
         if: ${{ always()}}
