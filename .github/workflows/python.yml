@@ -32,6 +32,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Fix swagger coverage classpath
+        run: |
+          # Создаем переменную с правильным classpath
+          JAR_DIR="/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/swagger_coverage_py/swagger-coverage-commandline/lib"
+          JAR_FILES=$(find "$JAR_DIR" -name "*.jar" | tr '\n' ':')
+          export SWAGGER_COVERAGE_CP="$JAR_FILES"
+          
+          # Запускаем тесты с правильным classpath
+          PYTHONPATH=. pytest tests/functional/
+            
       - name: Run tests
         run: |
           export PATH=$JAVA_HOME/bin:$PATH
