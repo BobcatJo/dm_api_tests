@@ -31,19 +31,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
-      - name: Fix swagger coverage command
-        run: |
-            # Создаем правильный classpath
-            JAR_DIR="/opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages/swagger_coverage_py/swagger-coverage-commandline/lib"
-            CLASSPATH=$(find "$JAR_DIR" -name "*.jar" | tr '\n' ':')
-        
-            # Тестируем команду
-            java -cp "$CLASSPATH" com.github.viclovsky.swagger.coverage.CommandLine --help && echo "✅ Java command works" || echo "❌ Java command failed"
-        
-            # Сохраняем для тестов
-            echo "SWAGGER_COVERAGE_CP=$CLASSPATH" >> $GITHUB_ENV
-            
+          
       - name: Run tests
         run: |
           export PATH=$JAVA_HOME/bin:$PATH
