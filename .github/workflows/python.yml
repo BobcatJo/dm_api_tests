@@ -34,11 +34,10 @@ jobs:
 
       - name: Run tests
         run: |
+          export PATH=$JAVA_HOME/bin:$PATH
           java --version
           which java
-          ls
-          export JAVA_HOME=$JAVA_HOME
-          pytest ./tests --alluredir=allure-results --disable-warnings
+          pytest -m./tests --alluredir=allure-results --disable-warnings
         continue-on-error: true
 
       - name: Run Coverage
