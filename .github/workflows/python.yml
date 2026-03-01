@@ -31,7 +31,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
+          
       - name: Run tests
         run: |
           export PATH=$JAVA_HOME/bin:$PATH
@@ -42,7 +42,7 @@ jobs:
 
       - name: Run Coverage
         if: ${{ always()}}
-        run: |
+        run: | 
           python -m packages.notifier.bot
 
       - name: Archive allure results
