@@ -37,7 +37,8 @@ jobs:
           export PATH=$JAVA_HOME/bin:$PATH
           java --version
           which java
-          python -m pytest ./tests --alluredir=allure-results --disable-warnings        continue-on-error: true
+          python -m pytest ./tests --alluredir=allure-results --disable-warnings
+        continue-on-error: true
 
       - name: Run Coverage
         if: ${{ always()}}
