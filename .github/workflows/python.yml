@@ -32,6 +32,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Check files
+        run: |
+          ls -la
+          ls -la swagger-coverage-output/ || echo "Directory not found"
+          test -f swagger-doc-dm-api-account.json || echo "Swagger file not found"
+
       - name: Run tests
         run: |
           export PATH=$JAVA_HOME/bin:$PATH
