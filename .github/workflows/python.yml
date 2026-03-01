@@ -40,17 +40,17 @@ jobs:
           python -m pytest ./tests --alluredir=allure-results --disable-warnings
         continue-on-error: true
 
-#      - name: Run Coverage
-#        if: ${{ always()}}
-#        run: |
-#          python -m packages.notifier.bot
-#
-#      - name: Archive allure results
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: allure-results
-#          path: allure-results
-#          retention-days: 1
+      - name: Run Coverage
+        if: ${{ always()}}
+        run: |
+          python -m packages.notifier.bot
+
+      - name: Archive allure results
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: allure-results
+          retention-days: 1
 
   generate-report:
     runs-on: ubuntu-latest
