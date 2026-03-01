@@ -40,24 +40,17 @@ jobs:
           python -m pytest ./tests --alluredir=allure-results --disable-warnings
         continue-on-error: true
 
-      - name: Check files
-        run: |
-          ls -la
-          ls -la swagger-coverage-output/ || echo "Directory not found"
-          ls -la allure-results/ || echo "Directory not found"
-          test -f swagger-doc-dm-api-account.json || echo "Swagger file not found"
-
-      - name: Run Coverage
-        if: ${{ always()}}
-        run: | 
-          python -m packages.notifier.bot
-
-      - name: Archive allure results
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-results
-          path: allure-results
-          retention-days: 1
+#      - name: Run Coverage
+#        if: ${{ always()}}
+#        run: |
+#          python -m packages.notifier.bot
+#
+#      - name: Archive allure results
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: allure-results
+#          path: allure-results
+#          retention-days: 1
 
   generate-report:
     runs-on: ubuntu-latest
