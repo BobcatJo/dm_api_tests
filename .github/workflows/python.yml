@@ -35,7 +35,6 @@ jobs:
       - name: Run tests
         run: |
           export PATH=$JAVA_HOME/bin:$PATH
-          java --version
           which java
           python -m pytest ./tests --alluredir=allure-results --disable-warnings
         continue-on-error: true
